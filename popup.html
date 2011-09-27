@@ -1,0 +1,66 @@
+<html>
+<head>
+<style>
+body {
+	min-width:400px;
+	overflow-x:hidden;
+	font-size: 12px;
+	font-family: Arial, sans-serif;
+}
+
+a {
+	color: blue;
+}
+
+#feeds-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+#feeds-list li {
+	padding: 2px 0;
+	text-align: right;
+}
+</style>
+
+<script>
+chrome.tabs.getSelected(null,
+	function(tab) {
+		chrome.tabs.sendRequest(
+			tab.id,
+			{
+				greeting: "getFeeds"
+			},
+			function(response) {
+				if(response.feeds_list) {
+					var feeds = response.feeds_list;
+					for(var i = 0; i < feeds.length; i++) {
+						var f = feeds[i];
+						var a = document.createElement('a');
+						a.innerHTML = f.title;
+						a.href = f.href;
+						a.target= "_blank";
+						var li = document.createElement('li');
+						li.appendChild(a);
+						document.getElementById("feeds-list").appendChild(li);
+					}
+				}
+				else {
+					var li = document.createElement('li');
+					li.innerHTML = "No feeds found";
+					document.getElementById("feeds-list").appendChild(li);
+				}
+			}
+		);
+	}
+);
+</script>
+</head>
+<body>
+<ul id="feeds-list">
+	
+</ul>
+	
+</div>
+</body>
+</html>
